@@ -1,0 +1,32 @@
+ADDCOLUMS(TABLE,Name1,Expression1,.........)
+CALENDAR([Start Date],[End Date])
+FORMAT(Value,Format,[Locale Name])
+YEAR(Date)
+WEEKDAY(Date,[Return Type])
+VALUE(Text)
+
+
+
+Date = 
+ADDCOLUMNS (
+CALENDAR (Date(2010,1,1),Date(2035,12,31)),
+"DateAsInteger", FORMAT ( [Date], "YYYYMMDD" ),
+"Year", YEAR ( [Date] ),
+"Monthnumber", FORMAT ( [Date], "MM" ),
+"YearMonthnumber", FORMAT ( [Date], "YYYY/MM" ),
+"YearMonthShort", FORMAT ( [Date], "YYYY/mmm" ),
+"MonthNameShort", FORMAT ( [Date], "mmm" ),
+"MonthNameLong", FORMAT ( [Date], "mmmm" ),
+"DayOfWeekNumber", WEEKDAY ( [Date] ),
+"DayOfWeek", FORMAT ( [Date], "dddd" ),
+"DayOfWeekShort", FORMAT ( [Date], "ddd" ),
+"Quarter", "Q" & FORMAT ( [Date], "Q" ),
+"YearQuarter", FORMAT ( [Date], "YYYY" ) & "/Q" & FORMAT ( [Date], "Q" ),
+"Qtr",IF(FORMAT ( [Date], "Q" )="1","Q4",IF(FORMAT ( [Date], "Q" )="2","Q1",IF(FORMAT ( [Date], "Q" )="3","Q2","Q3"))),
+"Fiscal Year",
+  CONCATENATE("FY",
+                IF(MONTH([Date]) <=3,
+                       VALUE(FORMAT([Date],"YY"))-1,
+                       VALUE(FORMAT([Date],"YY"))))
+
+)
