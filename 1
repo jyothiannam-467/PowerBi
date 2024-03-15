@@ -2,3 +2,7 @@ Unique Part Nos(Next >60 Days) = CALCULATE(DISTINCTCOUNT('Purchase Line'[No_ - C
 Unique Part Nos = SUMX(VALUES('Purchase Header'[Buy-from Vendor No_]),CALCULATE(DISTINCTCOUNT('Purchase Line'[No_]))) 
 Total Qty(Next >60 Days) = CALCULATE(SUM('Purchase Line'[Quantity - Copy.1]),FILTER('Purchase Line','Purchase Line'[Revised Expected Date]+90)) 
 AgingDay = CALCULATE(DATEDIFF(LASTDATE('Purchase Header'[Purchase Line.Expected Receipt Date]),(LASTDATE(Purch_Inv_Header[Purch_Inv_Line.Posting Date])),DAY))
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Column = IF('Purchase Header'[Document Type]=1,"Quote",IF('Purchase Header'[Document Type]=2,"Order",IF('Purchase Header'[Document Type]=3,"Invoice",IF('Purchase Header'[Document Type]=4,"CreditMemo",IF('Purchase Header'[Document Type]=5,"BlanketOrder",IF('Purchase Header'[Document Type]=6,"ReturnOrder"))))))
