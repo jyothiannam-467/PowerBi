@@ -119,4 +119,13 @@ CALENDAR (Date(2010,1,1),Date(2035,12,31)),
 
 )
 
+_____________________________________________________________________________________________________________________________________
+Fiscal Years 
+--------------
 
+"Fiscal Years" ,IF([Date]>=DATE(YEAR([Date]),4,1),YEAR([Date]) & "-" & Right(YEAR([Date])+1,2),YEAR([Date])-1 & "-" & Right(YEAR([Date]),2))
+
+Fiscal Month 
+----------------
+
+"FM" ,IF(FORMAT ( [Date], "mmm" )="Jan","10",IF(FORMAT ( [Date], "mmm" )="Feb","11",IF(FORMAT ( [Date], "mmm" )="Mar","12",IF(FORMAT ( [Date], "mmm" )="Apr","1",IF(FORMAT ( [Date], "mmm" )="May","02",IF(FORMAT ( [Date], "mmm" )="Jun","03",IF(FORMAT ( [Date], "mmm" )="Jul","04",IF(FORMAT ( [Date], "mmm" )="Aug","05",IF(FORMAT ( [Date], "mmm" )="Sep","06",IF(FORMAT ( [Date], "mmm" )="Oct","07",IF(FORMAT ( [Date], "mmm" )="Nov","08",IF(FORMAT ( [Date], "mmm" )="Dec","09"))))))))))))
