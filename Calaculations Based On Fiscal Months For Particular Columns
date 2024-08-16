@@ -1,0 +1,31 @@
+Actual Expenses - YTD CAPEX = VAR CurrentDate = MAX(DateNew[Date])
+VAR FiscalYearStart = 
+    IF(
+        MONTH(CurrentDate) >= 4, 
+        DATE(YEAR(CurrentDate), 4, 1), 
+        DATE(YEAR(CurrentDate) - 1, 4, 1)
+    )
+VAR FiscalYearEnd = 
+    IF(
+        MONTH(CurrentDate) >= 4, 
+        DATE(YEAR(CurrentDate) + 1, 3, 31), 
+        DATE(YEAR(CurrentDate), 3, 31)
+    )
+RETURN
+CALCULATE(
+    SUM(Append_GeneralLedgerEntries[Amount]),
+    FILTER(
+        Append_ChartOfAccounts, 
+        Append_ChartOfAccounts[No] >= 20000000000 && 
+        Append_ChartOfAccounts[No] <= 29999999999
+    ),
+    FILTER(
+        Append_GeneralLedgerEntries, 
+        Append_GeneralLedgerEntries[Shortcut_Dimension_3_Code] = "HOME AWAY FROM HOME"
+    ),
+    FILTER(
+        Append_GeneralLedgerEntries, 
+        Append_GeneralLedgerEntries[Posting_Date] >= FiscalYearStart && 
+        Append_GeneralLedgerEntries[Posting_Date] <= CurrentDate
+    )
+)
