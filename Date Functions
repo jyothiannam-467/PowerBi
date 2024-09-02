@@ -119,7 +119,7 @@ CALENDAR (Date(2010,1,1),Date(2035,12,31)),
 
 )
 
-_____________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________________________________
 Fiscal Years 
 --------------
 
@@ -129,3 +129,65 @@ Fiscal Month
 ----------------
 
 "FM" ,IF(FORMAT ( [Date], "mmm" )="Jan","10",IF(FORMAT ( [Date], "mmm" )="Feb","11",IF(FORMAT ( [Date], "mmm" )="Mar","12",IF(FORMAT ( [Date], "mmm" )="Apr","1",IF(FORMAT ( [Date], "mmm" )="May","02",IF(FORMAT ( [Date], "mmm" )="Jun","03",IF(FORMAT ( [Date], "mmm" )="Jul","04",IF(FORMAT ( [Date], "mmm" )="Aug","05",IF(FORMAT ( [Date], "mmm" )="Sep","06",IF(FORMAT ( [Date], "mmm" )="Oct","07",IF(FORMAT ( [Date], "mmm" )="Nov","08",IF(FORMAT ( [Date], "mmm" )="Dec","09"))))))))))))
+__________________________________________________________________________________________________________________________________________________________________
+
+Current Calendar
+------------------
+= 
+
+--Inputs--
+VAR WeekStartsOn = "Mon"
+VAR FiscalStartMonth = 4 
+
+--NOTE: Calendar week starts from Monday
+
+--Calculation--
+RETURN
+    ADDCOLUMNS (
+        CALENDARAUTO ( FiscalStartMonth - 1 ),
+        "MIndex", MONTH ( [Date] ),"DIndex", Day ( [Date] ),
+        "FiscalMIndex", MONTH ( EDATE ( [Date], - FiscalStartMonth + 1 ) ),
+        "CalMonth", FORMAT ( [Date], "mmm" ),
+        "CalQtr", "Q"
+            & CEILING ( MONTH ( [Date] ), FiscalStartMonth - 1 ) / ( FiscalStartMonth - 1 ),
+        "CalYear", YEAR ( [Date] ),"CalMonthYr", FORMAT ( [Date], "mmm-yy" ),
+        "Fiscal Week",
+        VAR FiscalFirstDay =
+            IF (
+                MONTH ( [Date] ) < FiscalStartMonth,
+                DATE ( YEAR ( [Date] ) - 1, FiscalStartMonth, 1 ),
+                DATE ( YEAR ( [Date] ), FiscalStartMonth, 1 )
+            )
+        VAR FilteredTableCount =
+            COUNTROWS (
+                FILTER (
+                    SELECTCOLUMNS ( GENERATESERIES ( FiscalFirstDay, [Date] ), "Dates", [Value] ),
+                    FORMAT ( [Dates], "ddd" ) = WeekStartsOn
+                )
+            )
+        VAR WeekNos =
+            IF (
+                FORMAT ( FiscalFirstDay, "ddd" ) <> WeekStartsOn,
+                FilteredTableCount + 1,
+                FilteredTableCount
+            )
+        RETURN
+            "Week " & WeekNos,
+        "Fiscal Qtr", "Q"
+            & CEILING ( MONTH ( EDATE ( [Date], - FiscalStartMonth + 1 ) ), 3 ) / 3,
+        "Fiscal Year",
+        VAR CY =
+            RIGHT ( YEAR ( [Date] ), 2 )
+        VAR NY =
+            RIGHT ( YEAR ( [Date] ) + 1, 2 )
+        VAR PY =
+            RIGHT ( YEAR ( [Date] ) - 1, 2 )
+        VAR FinYear =
+            IF ( MONTH ( [Date] ) > ( FiscalStartMonth - 1 ), CY & "-" & NY, PY & "-" & CY )
+        RETURN
+            FinYear,
+        "CalWeekNo", WEEKNUM ( [Date], 2 ),
+        "Weekend/Working", IF ( WEEKDAY ( [Date], 2 ) > 5, "Weekend", "Working" ),
+        "Day", FORMAT ( [Date], "ddd" ),
+        "CustomDate", FORMAT ( [Date], "d/mm" )
+    )
