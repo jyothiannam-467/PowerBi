@@ -1,0 +1,12 @@
+DATEDIFF('DatesBetween'[CREATED_ON],'DatesBetween'[PROJ_ST_DT],DAY)
+
+
+daysage =
+DATEDIFF(
+SELECTEDVALUE(Table1[CREATED_ON]),
+SELECTEDVALUE(Table2[PROJ_ST_DT]),
+DAY
+)
+
+
+Diff = DATEDIFF(RELATED(Table1[Joining date]), [Action date],DAY)
