@@ -1,0 +1,38 @@
+Background Colour
+______________________
+
+BackgroundColor_POs = 
+SWITCH(
+    TRUE(),
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3] = "Closed", "Green",
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3] = "Fully Open", "#F22727",
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3]= "Partly Closed", "#ffc000",
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3] = "Partly Open", "#ffc000",
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3] = "Total", "Grey",
+   Table1[Column1]= "Invoicing of POs" && Table1[Column3] = "Closed", "Green",
+    Table1[Column1]= "Invoicing of POs" && Table1[Column3] = "Fully Open", "#F22727",
+    Table1[Column1] = "Invoicing of POs" && Table1[Column3] = "Partly Closed", "#ffc000",
+    Table1[Column1]= "Invoicing of POs" && Table1[Column3]= "Partly Open", "#ffc000",
+   Table1[Column1]= "Invoicing of POs" && Table1[Column3] = "Total", "Grey",
+    BLANK()
+)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Font 
+__________
+
+Font-White = 
+SWITCH(
+    TRUE(),
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3] = "Closed", "White",
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3] = "Fully Open", "White",
+    Table1[Column1]= "Receipt of POs (GRN)" && Table1[Column3] = "Partly Closed", "White",
+    Table1[Column1] = "Receipt of POs (GRN)" && Table1[Column3] = "Partly Open", "White",
+   Table1[Column1]= "Receipt of POs (GRN)" && Table1[Column3]= "Total", "White",
+    Table1[Column1] = "Invoicing of POs" && Table1[Column3] = "Closed", "White",
+    Table1[Column1]= "Invoicing of POs" && Table1[Column3] = "Fully Open", "White",
+    Table1[Column1] = "Invoicing of POs" && Table1[Column3] = "Partly Closed", "White",
+    Table1[Column1]= "Invoicing of POs" && Table1[Column3]= "Partly Open", "White",
+    Table1[Column1] = "Invoicing of POs" && Table1[Column3]= "Total", "White",
+    BLANK()
+)
