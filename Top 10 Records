@@ -1,3 +1,6 @@
+Modelling > New Table
+______________________________
+
 Top10_PurchaseLines = 
 TOPN(
     10, 
