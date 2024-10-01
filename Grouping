@@ -1,0 +1,87 @@
+Nos_FCRA_PO = 
+VAR Particular1 = SELECTEDVALUE('Table1'[Column1])
+VAR Particular2 = SELECTEDVALUE('Table1'[Column3])
+
+RETURN 
+    SWITCH(
+        TRUE(),
+        
+        -- Logic for POs Raised
+        Particular1 = "POs Raised", [POsRaised_FCRA_PO],
+
+        -- Logic for Receipt of POs (GRN)
+        Particular1 = "Receipt of POs (GRN)" && Particular2 = "Closed", [ReceiptClosed_FCRA_PO],
+        Particular1 = "Receipt of POs (GRN)" && Particular2 = "Fully Open", [ReceiptFullyOpen_FCRA_PO],
+        Particular1 = "Receipt of POs (GRN)" && Particular2 = "Partly Closed", [ReceiptPartlyClosed_FCRA_PO],
+        Particular1 = "Receipt of POs (GRN)" && Particular2 = "Partly Open", [ReceiptPartlyOpen_FCRA_PO],
+        Particular1 = "Receipt of POs (GRN)" && Particular2 = "Total" ,[ReceiptClosed_FCRA_PO]+[ReceiptFullyOpen_FCRA_PO]+[ReceiptPartlyClosed_FCRA_PO]+[ReceiptPartlyOpen_FCRA_PO],
+        
+        -- Logic for Invoicing of POs
+        Particular1 = "Invoicing of POs" && Particular2 = "Closed", [InvoicedClosed_FCRA_PO],
+        Particular1 = "Invoicing of POs" && Particular2 = "Fully Open", [InvoicedFullyOpen_FCRA_PO],
+        Particular1 = "Invoicing of POs" && Particular2 = "Partly Closed", [InvoicedPartlyClosed_FCRA_PO],
+        Particular1 = "Invoicing of POs" && Particular2 = "Partly Open", [InvoicedPartlyOpen_FCRA_PO],
+        Particular1 = "Invoicing of POs" && Particular2 = "Total",[InvoicedClosed_FCRA_PO]+[InvoicedFullyOpen_FCRA_PO]+[InvoicedPartlyClosed_FCRA_PO]+[InvoicedPartlyOpen_FCRA_PO],
+        
+        -- Default value
+        0 
+    )
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nos_FCRA = var currentParticular = SELECTEDVALUE('Table'[Column1])
+
+return SWITCH(TRUE(),
+    currentParticular = "POs Raised",[POsRaised_FCRA],
+ currentParticular = "Receipt of POs (GRN)","",
+ currentParticular = "Closed",[ReceiptClosed_FCRA],
+ currentParticular = "Fully Open",[ReceiptFullyOpen_FCRA],
+ currentParticular = "Partly Closed",[ReceiptPartlyClosed_FCRA],
+ currentParticular = "Partly Open",[ReceiptPartlyOpen_FCRA],
+ currentParticular = "Total","",
+ currentParticular = "Invoicing of Pos","",
+currentParticular = "Closed.",[InvoicedClosed_FCRA],
+currentParticular = "Fully Open.",[InvoicedFullyOpen_FCRA],
+currentParticular = "Partly Closed.",[InvoicedPartlyClosed_FCRA],
+currentParticular = "Partly Open.",[InvoicedPartlyOpen_FCRA],
+currentParticular = "Total.","",
+ 
+0)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Current Year = var currentItem = SELECTEDVALUE('Table'[Groups])
+
+return SWITCH(TRUE(),
+    currentItem = "Net Revenues:","",
+    currentItem = "..........United States",[United States],
+    currentItem = "..........Canada",[Canada],
+    currentItem = "..........United Kingdom",[United Kingdom],
+    currentItem = "..........Rest of the World",[Rest Of the World],
+    currentItem = "Net Revenues Total",[NetRevenueTotal],
+    currentItem = "Cost Of Goods Sold:","",
+    currentItem = "..........Lab Operating Costs",[Land Operating],
+    currentItem = "..........Freight And Distribution",[Freight And Distribution],
+    currentItem = "..........Kit Resale",[Kit Resale],
+    currentItem = "Total costs Of Goods Sold",[Total Costs Of Goods Sold],
+    currentItem = "Gross Profit","",
+    currentItem = "..........Gross Margin %",[Gross Profit Margin],
+    currentItem = "Operating Expenses:","",
+    currentItem = "..........Research And Development",[Research and Development],
+    currentItem = "..........Sales,Marketing and Education",[Sales,Marketing And Education],
+    currentItem = "..........General And Administrative",[General],
+    currentItem = "..........Bad Debt Expense",[Bad Dept Expense],
+    currentItem = "..........Amortization",[Amortization],
+    currentItem = "Total Operating expenses",[Total Operating Expenses],
+    currentItem = "Operating Income (loss)",[Operating Income (loss)],
+    currentItem = "Non-Recurring Expenses:","",
+    currentItem = "..........(Gain) loss on Sale of Assests",[(Gain)Loss Of Sales],
+    currentItem = "..........Non-Recurring Expenses",[No-Recurring Expenses],
+    currentItem = "..........Restructuring Costs",[Restructuring Costs],
+    currentItem = "Total Non-Recurring Expenses",[TotalNon-Recurring],
+    currentItem = "Other Expenses:","",
+    currentItem = "..........Interest Expense,Net",[InterestExpense,Net],
+    currentItem = "..........Non-Recurring Expenses",[No-Recurring Expenses],
+    currentItem = "..........Currency exchange(Gain) Loss",[Currency Exchange(Gain)Loss],
+    currentItem = "Total Other Expenses",[Tot],
+
+0)
+
