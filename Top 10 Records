@@ -1,0 +1,19 @@
+Top10_PurchaseLines = 
+TOPN(
+    10, 
+    'Purchase Lines', 
+    'Purchase Lines'[Amount], 
+    DESC
+)
+----------------------------------------------------------------
+TopN_Sum = 
+IF (
+    RANKX(
+        ALL('Purchase Orders'), 
+        [TopN_Sum_Amount], 
+        , 
+        DESC
+    ) <= 10, 
+    [TopN_Sum_Amount], 
+    BLANK()
+)
