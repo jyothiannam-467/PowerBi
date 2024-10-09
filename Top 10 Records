@@ -59,3 +59,57 @@ RETURN
         ),
         [Rank] <= 10                                   // Show only the top 10 records based on rank
     )
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Top 10 Purchase Orders = 
+VAR SelectedLocation = SELECTEDVALUE('Purchase Orders'[Location_Code]) // Get the selected location from the slicer
+VAR SelectedFiscalYear = SELECTEDVALUE('Date'[Fiscal Years]) // Get the selected fiscal year from the slicer
+VAR TotalPurchaseAmount =                                               
+    CALCULATE(
+        SUM('Purchase Lines'[Amount])                 // Calculate the total amount of purchase lines
+    )
+
+
+RETURN
+    FILTER(
+        ADDCOLUMNS(
+            SUMMARIZE(
+                'Purchase Lines',
+                'Purchase Lines'[Document_No],               // Group by Purchase Order No
+                'Purchase Orders'[Location_Code],            // Include Location Code
+                'Purchase Orders'[Status],                   // Include Status
+                'Purchase Orders'[Buy_from_Vendor_No],      // Include Vendor
+                'Purchase Orders'[Company Name],             // Include Company Name
+                'Purchase Orders'[Posting_Date]              // Include Posting Date
+            ),
+            "TotalAmount", [TotalAmount475],         // Add Total Amount for each order
+            "Rank",
+            RANKX(
+                CALCULATETABLE(                             // Apply ranking based on filtered records
+                    'Purchase Lines',
+                    KEEPFILTERS(ALL('Purchase Lines'[Document_No])),   // Keep all selected filters from the slicer
+                    'Purchase Orders'[Location_Code] = SelectedLocation,
+                     FORMAT(SelectedFiscalYear,'Purchase Orders'[Posting_Date])
+                ),
+                [TotalAmount475], , DESC
+            ),
+             "PercentageOfTotal", 
+                ([TotalAmount475] / TotalPurchaseAmount)*100               // Calculate percentage of the total
+        ),
+        [Rank] <= 10                                   // Show only the top 10 records based on rank
+    )
+--------------------------------------------------------------------------------------------------------------------------------------------
+Filtering based on Location 
+_________________________________________
+TotalAmountByLocationMeasure = 
+IF(
+    ISFILTERED(Locations_Local_PowerBi[Code]),
+    CALCULATE(
+        SUM('Purchase Lines'[Amount]),
+        FILTER(
+            ALL('Purchase Lines'),
+            'Purchase Lines'[Location_Code] IN VALUES(Locations_Local_PowerBi[Code])
+        )
+    ),
+    CALCULATE(SUM('Purchase Lines'[Amount]),ALL('Purchase Lines') // Total for all Purchase Lines when no location is selected
+)
+)
