@@ -1,0 +1,37 @@
+StartOfMonth = 
+VAR CurrentDate = TODAY()
+VAR SelectedDate = MAX('Date'[Date])
+VAR IsSlicerApplied = ISCROSSFILTERED('Date'[Date])
+VAR ReferenceDate = 
+    IF(
+        IsSlicerApplied && NOT ISBLANK(SelectedDate),
+        SelectedDate,
+        CurrentDate
+    )
+VAR FirstDayOfPreviousMonth = DATE(YEAR(ReferenceDate), MONTH(ReferenceDate) - 1, 1)
+VAR LastDayOfPreviousMonth = EOMONTH(FirstDayOfPreviousMonth, 0)
+VAR LastFriday = 
+    LastDayOfPreviousMonth - 
+    MOD(WEEKDAY(LastDayOfPreviousMonth, 2) - 5 + 7, 7)
+RETURN
+    LastFriday
+
+---------------------------------------------------------------------------------------------------------------------
+EndOfMonth = 
+VAR CurrentDate = TODAY()
+VAR SelectedDate = MAX('Date'[Date])
+VAR IsSlicerApplied = ISCROSSFILTERED('Date'[Date])
+VAR ReferenceDate = 
+    IF(
+        IsSlicerApplied && NOT ISBLANK(SelectedDate),
+        SelectedDate,
+        CurrentDate
+    )
+VAR EndOfCurrentMonth = EOMONTH(ReferenceDate, 0)
+VAR LastFriday = 
+    EndOfCurrentMonth - 
+    MOD(WEEKDAY(EndOfCurrentMonth, 2) - 5 + 7, 7)
+VAR DayBeforeLastFriday = LastFriday - 1
+RETURN
+    DayBeforeLastFriday
+
