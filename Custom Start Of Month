@@ -1,0 +1,17 @@
+StartOfMonth_ = 
+VAR CurrentDate = TODAY()
+VAR SelectedDate = MAX('DateNew'[Date])
+VAR IsSlicerApplied = ISCROSSFILTERED('DateNew'[Date])
+VAR ReferenceDate = 
+    IF(
+        IsSlicerApplied && NOT ISBLANK(SelectedDate),
+        SelectedDate,
+        CurrentDate
+    )
+VAR FirstDayOfPreviousMonth = DATE(YEAR(ReferenceDate), MONTH(ReferenceDate) - 1, 1)
+VAR LastDayOfPreviousMonth = EOMONTH(FirstDayOfPreviousMonth, 0)
+VAR LastFriday = 
+    LastDayOfPreviousMonth - 
+    MOD(WEEKDAY(LastDayOfPreviousMonth, 2) - 5 + 7, 7)
+RETURN
+    LastFriday
