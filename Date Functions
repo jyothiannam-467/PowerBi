@@ -1,3 +1,21 @@
+Calendar Date Table = 
+VAR StartDate = MIN(GeneralLedgerEntries[Posting_Date])
+VAR EndDate = MAX(GeneralLedgerEntries[Posting_Date])
+RETURN
+ADDCOLUMNS(
+    CALENDAR(StartDate, EndDate),
+    "Year", YEAR([Date]),
+    "Month Number", MONTH([Date]),
+    "Month Name", FORMAT([Date], "MMMM"),
+    "Month Year", FORMAT([Date], "MMM YYYY"),
+    "Quarter", "Q" & FORMAT([Date], "Q"),
+    "Year-Month", FORMAT([Date], "YYYY-MM"),
+    "Weekday", WEEKDAY([Date], 2),  -- 2 = Monday as first day
+    "Day Name", FORMAT([Date], "dddd"),
+    "Is Weekday", IF(WEEKDAY([Date], 2) < 6, TRUE, FALSE)
+)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 DateKey = CALENDAR(DATE(2012,01,01),DATE(2017,06,30))
  
 ## Then add in a new column from the ribbon for each of the following:
