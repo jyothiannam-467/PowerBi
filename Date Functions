@@ -14,6 +14,30 @@ ADDCOLUMNS(
     "Day Name", FORMAT([Date], "dddd"),
     "Is Weekday", IF(WEEKDAY([Date], 2) < 6, TRUE, FALSE)
 )
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Calendar Date = 
+VAR RawMinDate = MINX(ALL(GeneralLedgerEntries), GeneralLedgerEntries[Posting_Date])
+VAR RawMaxDate = MAXX(ALL(GeneralLedgerEntries), GeneralLedgerEntries[Posting_Date])
+VAR MinDate = DATE(YEAR(RawMinDate), MONTH(RawMinDate), 1)
+VAR MaxDate = EOMONTH(RawMaxDate, 0)
+RETURN
+ADDCOLUMNS (
+    CALENDAR(MinDate, MaxDate),
+    "DateAsInteger", FORMAT([Date], "YYYYMMDD"),
+    "Year", YEAR([Date]),
+    "Monthnumber", FORMAT([Date], "MM"),
+    "YearMonthnumber", FORMAT([Date], "YYYY/MM"),
+    "YearMonthShort", FORMAT([Date], "YYYY/mmm"),
+    "MonthNameShort", FORMAT([Date], "mmm"),
+    "MonthNameLong", FORMAT([Date], "mmmm"),
+    "DayOfWeekNumber", WEEKDAY([Date]),
+    "DayOfWeek", FORMAT([Date], "dddd"),
+    "DayOfWeekShort", FORMAT([Date], "ddd"),
+    "Quarter", "Q" & FORMAT(ROUNDUP(MONTH([Date]) / 3, 0), "0"),
+    "YearQuarter", FORMAT(YEAR([Date]), "0000") & "/Q" & FORMAT(ROUNDUP(MONTH([Date]) / 3, 0), "0")
+)
+
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 DateKey = CALENDAR(DATE(2012,01,01),DATE(2017,06,30))
