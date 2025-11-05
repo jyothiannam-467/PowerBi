@@ -1,4 +1,47 @@
 let
+    // Connect to Business Central
+    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+    #"DNOPRODUCE-PROD" = Source{[Name=EnvName]}[Data],
+    #"DNO Inc. LIVE" = #"DNOPRODUCE-PROD"{[Name=CompanyName]}[Data],
+    Advanced = #"DNO Inc. LIVE"{[Name="Advanced"]}[Data],
+    #"dnopowerbi/dnopowerbireports/v1.0" = Advanced{[Name=API]}[Data],
+    valueEntry_table = #"dnopowerbi/dnopowerbireports/v1.0"{[Name="valueEntry", Signature="table"]}[Data],
+
+    // Function to insert spaces before uppercase letters
+    InsertSpaceBeforeUpper = (input as text) as text =>
+        let
+            length = Text.Length(input),
+            indices = {0..(length - 1)},
+            listChars = List.Transform(
+                indices,
+                (i) =>
+                    let
+                        current = Text.At(input, i),
+                        previous = if i > 0 then Text.At(input, i - 1) else ""
+                    in
+                        if i > 0 and previous = Text.Lower(previous) and current = Text.Upper(current)
+                        then " " & current
+                        else current
+            )
+        in
+            Text.Combine(listChars, ""),
+
+    // Auto-rename columns with proper spacing and capitalization
+    RenamedColumns = Table.RenameColumns(
+        valueEntry_table,
+        List.Transform(
+            Table.ColumnNames(valueEntry_table),
+            (colName) => { colName, Text.Proper(InsertSpaceBeforeUpper(colName)) }
+        )
+    ),
+
+    // Final output
+    FinalOutput = RenamedColumns
+in
+    FinalOutput
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+let
     Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
     #"DNOPRODUCE-PROD" = Source{[Name=EnvName]}[Data],
     #"DNO Inc. LIVE" = #"DNOPRODUCE-PROD"{[Name=CompanyName]}[Data],
